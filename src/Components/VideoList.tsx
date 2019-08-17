@@ -41,7 +41,7 @@ export default class VideoList extends React.Component<IProps,IState>{
             response.forEach((video:any) => {
                 const row = (<tr>
                     <td className="align-middle" onClick={() => this.handleLike(video)}>{video.isFavourite === true?<Star/>:<StarBorder/>}</td>
-                    <td className="align-middle" onClick={() => this.playVideo(video)}><img src={"https://image.tmdb.org/t/p/w500/"+video.thumbnailUrl} width="100px" alt="Thumbnail"/></td>
+                    <td className="align-middle" onClick={() => this.playVideo(video)}><img src={"https://image.tmdb.org/t/p/w500/"+video.thumbnailUrl} width="100px" alt={video.movieTitle + " directed by "+video.director}/></td>
                     <td className="align-middle" onClick={() => this.playVideo(video)}><b>{video.movieTitle}</b></td>
                     <td className="align-middle video-list-close"><button onClick={() => this.deleteVideo(video.movieId)}><Close/></button></td>}                                    
                     </tr>)
@@ -83,7 +83,7 @@ export default class VideoList extends React.Component<IProps,IState>{
     public render() {
         return (
             <div className="video-list">
-            <h1 className="play-heading"><span className="blue-heading">movie</span>history</h1>
+            <h1 className="play-heading"><span className="blue-heading">MOVIES</span> CLICK TO SEE PLOT</h1>
             <table className="table">
                 {this.state.videoList}
             </table>

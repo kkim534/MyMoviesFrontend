@@ -27,57 +27,36 @@ export default class CaptionArea extends React.Component<IProps, IState>{
     }
 
     public search = () => {
-        if(this.state.input.trim() === ""){
-            this.setState({result:[]},()=>this.makeTableBody())
-        }else{
-            fetch("https://scriberapi.azurewebsites.net/api/Videos/SearchByTranscriptions/"+this.state.input,{
-                headers:{
-                    Accept:"text/plain"
-                },
-                method:"GET"
-            }).then((response:any)=>{
-                return response.json()
-            }).then((response:any)=>{
-                this.setState({result:response},()=>this.makeTableBody())
-            })
+        const toSend = {
+            "url":this.state.input,
         }
-    }
-
-    public makeTableBody = () =>{
-        const toRet: any[] = []
-        this.state.result.sort((a:any,b:any)=>{
-            if(a.webUrl === b.webUrl){
-                return 0;
-            }else if(a.webUrl === this.props.currentVideo){
-                return -1;
-            }else if(b.webUrl === this.props.currentVideo){
-                return 1;
-            }else{
-                return a.videoTitle.localeCompare(b.videoTitle);
-            }
+        fetch("https://msamymoviesdevops.azurewebsites.net/api/Comments/"+this.props.currentVideo.movieId,{
+            body:JSON.stringify(toSend),
+            headers:{
+                Accept:"text/plain",
+                "Content-Type":"application/json-patch+json"
+            },
+            method:"POST"
+        }).then((response:any)=>{
+            this.updateComments()
         })
-        this.state.result.forEach((video:any) => {
-            video.transcription.forEach((caption:any) => {
-                toRet.push(
-                    <tr onClick={()=>this.handleClick(video.webUrl,caption.startTime)}>
-                        <td>{caption.startTime}</td>
-                        <td>{caption.phrase}</td>
-                        <td>{video.videoTitle}</td>
-                    </tr>
-                )
+    }
+    
+    public updateComments = () => {
+        fetch('https://msamymoviesdevops.azurewebsites.net/api/Comments',{
+            method:'GET'
+        }).then((response:any) => {
+            return response.json();
+        }).then((response:any)=>{
+            const output:any[] = []
+            response.forEach((element:any) => {
+                const row = (<tr>
+                    <td className="align-middle"><b>{element.comment}</b></td>
+                    </tr>)
+                output.push(row);
+            })
+            this.setState({result:output})
             });
-        });
-        if (toRet.length === 0){
-            if(this.state.input.trim() === ""){
-                const error = <div><p>Sorry you need to search</p></div>
-                this.setState({body:error})
-            }else{
-                const error = <div><p>Sorry no results returned</p></div>
-                this.setState({body:error})
-            }
-        }else{
-            this.setState({body:toRet})
-        }
     }
 
     public handleClick = (url:any,time:any) =>{
@@ -93,7 +72,7 @@ export default class CaptionArea extends React.Component<IProps, IState>{
                 <div className="caption-area">
                 <div className="row">
                     <div className="col-2 justify-content-center align-self-center">
-                        <h1><span className="red-heading">search</span>caption</h1>
+                        <h1><span className="red-heading">Comment</span></h1>
                     </div>
                     <div className="col-10">
                         
@@ -118,12 +97,10 @@ export default class CaptionArea extends React.Component<IProps, IState>{
                 <br/>
                 <table className="table">
                     <tr>
-                        <th>Time</th>
-                        <th>Caption</th>
-                        <th>Video</th>
+                        <th>Comments:</th>
                     </tr>
                     <tbody className="captionTable">
-                            {this.state.body}
+                            {this.state.result}
                     </tbody>
                 </table>
             </div>
