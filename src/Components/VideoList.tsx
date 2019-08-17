@@ -83,7 +83,7 @@ export default class VideoList extends React.Component<IProps,IState>{
     public render() {
         return (
             <div className="video-list">
-            <h1 className="play-heading"><span className="red-heading">my</span>movies</h1>
+            <h1 className="play-heading"><span className="blue-heading">movie</span>history</h1>
             <table className="table">
                 {this.state.videoList}
             </table>
