@@ -1,33 +1,40 @@
-.App {
-  text-align: center;
+.Drawer {
+    width: 250px;
+    min-width: 250px;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+.closeIcon {
+    width: 10%;
+    margin-right: 90%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.profileImage {
+    max-width: 250px;
+    border-radius: 50%;
 }
 
-.App-link {
-  color: #61dafb;
+#Search-Bar {
+    padding: 7px 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.MuiFormControl-marginNormal.SearchBar {
+    margin-left: 5%;
+    margin-top: 8px;
+    width: 30%;
+    float: right;
+    background-color: #EAEAEA;
+}
+
+.MuiButtonBase-root.menuButton {
+    display: inline-block;
+}
+
+.menuButtonDiv {
+    width: 50px;
+    display: inline-block;
+    float: right;
+}
+
+.header {
+    margin: 0 auto;
 }
