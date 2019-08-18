@@ -8,6 +8,8 @@ import * as Webcam from "react-webcam";
 
 interface IState {
     playingUrl:any,
+    hubConnection: any,
+    
     updateVideoList:any,
     refCamera: any
     authenticated: boolean
@@ -15,9 +17,11 @@ interface IState {
 }
 
 class App extends React.Component<{}, IState>{
+  public signalR = require("@aspnet/signalr");
   public constructor(props: any) {
     super(props);
     this.state = {
+      hubConnection: new this.signalR.HubConnectionBuilder().withUrl("https://mymoviesmsa.azurewebsites.net/hub").build(),
       playingUrl:"",
       updateVideoList:null,
       refCamera: React.createRef(),
@@ -26,6 +30,15 @@ class App extends React.Component<{}, IState>{
     }
     this.authenticate = this.authenticate.bind(this)
   }
+
+  public componentDidMount = () => {
+
+    this.state.hubConnection.on("Connected", ()  => {
+      console.log('A new user has connected to the hub.');
+    });
+
+    this.state.hubConnection.start().then(() => this.state.hubConnection.invoke("BroadcastMessage"));
+}
 
   public addVideo = (url:any) =>{
     const body = {"url":url}
@@ -38,7 +51,7 @@ class App extends React.Component<{}, IState>{
       method:"POST"
     }).then(()=>{
       this.state.updateVideoList()
-    })
+    }) .then(() => {this.state.hubConnection.invoke("VideoAdded")});
   }
 
   public updateURL = (url:object) => {
